@@ -1,0 +1,15 @@
+pandas 
+numpy 
+seaborn
+matplotlib
+scikit-learn==1.5.2
+xgboost
+imbalanced-learn
+Flask 
+pymongo 
+pymongo[srv]
+python-dotenv
+certifi
+pyaml
+
+# -e .
