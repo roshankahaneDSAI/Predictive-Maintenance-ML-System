@@ -90,8 +90,8 @@ class TrainingPipeline:
             data_validation_artifact=self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)            
             data_transformation_artifact=self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             model_trainer_artifact=self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-            pass    
-            # return model_trainer_artifact
+            return model_trainer_artifact
+        
         except Exception as e:
             raise CustomException(e,sys)
         
