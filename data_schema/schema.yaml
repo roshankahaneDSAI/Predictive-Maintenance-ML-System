@@ -1,0 +1,15 @@
+columns:  
+  Type: str
+  Air temperature [K]: float64  
+  Process temperature [K]: float64  
+  Rotational speed [rpm]: int64  
+  Torque [Nm]: float64  
+  Tool wear [min]: int64  
+  Failure Type: str  
+
+numerical_columns:  
+  - Air temperature [K]  
+  - Process temperature [K]  
+  - Rotational speed [rpm]  
+  - Torque [Nm]  
+  - Tool wear [min]  

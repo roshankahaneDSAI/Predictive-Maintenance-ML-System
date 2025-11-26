@@ -1,0 +1,21 @@
+Air temperature K:
+  drift_status: false
+  p_value: 0.7564768244124629
+Failure Type:
+  drift_status: false
+  p_value: 0.9999999999999986
+Process temperature K:
+  drift_status: false
+  p_value: 0.9477629665709796
+Rotational speed rpm:
+  drift_status: false
+  p_value: 0.606244874851325
+Tool wear min:
+  drift_status: false
+  p_value: 0.21339197123036224
+Torque Nm:
+  drift_status: false
+  p_value: 0.2367945885507641
+Type:
+  drift_status: false
+  p_value: 0.8473942219901571
