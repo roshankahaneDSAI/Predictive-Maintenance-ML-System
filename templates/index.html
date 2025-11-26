@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Predictive Maintenance</title>
+
+    <!-- Optional: clean Google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #020617;
+            --bg-alt: #0b1120;
+            --card-bg: #020617;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.15);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(148, 163, 184, 0.35);
+            --danger: #f97373;
+            --success: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at 0% 0%, #1e293b, #020617);
+            color: var(--text-main);
+            padding: 1.75rem 1.25rem 2.5rem;
+        }
+
+        .page-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header.page-header {
+            margin-bottom: 1.6rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.18rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-muted);
+            margin-bottom: 0.55rem;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        header.page-header h1 {
+            font-size: clamp(1.6rem, 2vw + 1rem, 2.1rem);
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        header.page-header p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            max-width: 640px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            gap: 1.8rem;
+            margin-top: 1.2rem;
+        }
+
+        @media (max-width: 860px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            border-radius: 18px;
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.06), transparent),
+                        radial-gradient(circle at 100% 100%, rgba(37, 99, 235, 0.08), transparent),
+                        rgba(15, 23, 42, 0.96);
+            border: 1px solid var(--border-subtle);
+            box-shadow:
+                0 20px 45px rgba(15, 23, 42, 0.75),
+                0 0 0 1px rgba(15, 23, 42, 0.8);
+            padding: 1.4rem 1.5rem 1.5rem;
+        }
+
+        .card + .card {
+            margin-top: 1rem;
+        }
+
+        .card h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 0.65rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card h2 span.icon {
+            font-size: 1.05rem;
+        }
+
+        .card p,
+        .card li {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .card-section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.7rem;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 0.86rem;
+        }
+
+        thead {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        th, td {
+            padding: 0.6rem 0.7rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.9);
+            text-align: left;
+        }
+
+        th {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        /* Form card */
+        .form-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        form.predict-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem 1rem;
+            margin-top: 0.4rem;
+        }
+
+        @media (max-width: 540px) {
+            form.predict-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.45rem 0.55rem;
+            border-radius: 10px;
+            border: 1px solid rgba(71, 85, 105, 0.9);
+            background: rgba(15, 23, 42, 0.98);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        button[type="submit"],
+        button#trainButton {
+            margin-top: 0.2rem;
+            padding: 0.55rem 1.2rem;
+            border-radius: 999px;
+            border: none;
+            outline: none;
+            font-size: 0.86rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: radial-gradient(circle at 0% 0%, #38bdf8, #0ea5e9);
+            color: #020617;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            box-shadow:
+                0 14px 28px rgba(8, 47, 73, 0.7),
+                0 0 0 1px rgba(56, 189, 248, 0.9);
+            transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s ease-out;
+        }
+
+        button[type="submit"]:hover,
+        button#trainButton:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow:
+                0 18px 32px rgba(8, 47, 73, 0.9),
+                0 0 0 1px rgba(125, 211, 252, 1);
+        }
+
+        button[type="submit"]:active,
+        button#trainButton:active {
+            transform: translateY(0);
+            box-shadow:
+                0 8px 15px rgba(8, 47, 73, 0.7),
+                0 0 0 1px rgba(56, 189, 248, 0.9);
+        }
+
+        button#trainButton:disabled {
+            cursor: wait;
+            opacity: 0.7;
+            box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.5);
+        }
+
+        .btn-icon {
+            font-size: 0.95rem;
+        }
+
+        .helper-text {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* Training card specific */
+        .train-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin: 0.6rem 0 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .meta-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.9);
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.18rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.12);
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+        }
+
+        .status-badge.running {
+            background: rgba(56, 189, 248, 0.12);
+            color: #bae6fd;
+            border-color: rgba(56, 189, 248, 0.7);
+        }
+
+        .status-badge.completed {
+            background: rgba(34, 197, 94, 0.12);
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.7);
+        }
+
+        .status-badge.error {
+            background: rgba(248, 113, 113, 0.12);
+            color: #fecaca;
+            border-color: rgba(248, 113, 113, 0.7);
+        }
+
+        #trainResponse {
+            font-size: 0.8rem;
+            margin-top: 0.45rem;
+            min-height: 1.1em;
+        }
+
+        #trainResponse.success {
+            color: var(--success);
+        }
+
+        #trainResponse.error {
+            color: var(--danger);
+        }
+
+        #trainResponse.info {
+            color: var(--accent);
+        }
+
+        .spinner {
+            width: 15px;
+            height: 15px;
+            border-radius: 999px;
+            border: 2px solid rgba(15, 23, 42, 0.12);
+            border-top-color: #0b1120;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Last prediction card */
+        .prediction-summary {
+            margin-top: 0.6rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 12px;
+            border: 1px dashed rgba(148, 163, 184, 0.6);
+            background: rgba(15, 23, 42, 0.85);
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .prediction-pill {
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .prediction-pill.success {
+            background: rgba(34, 197, 94, 0.14);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.55);
+        }
+
+        .prediction-pill.failure {
+            background: rgba(248, 113, 113, 0.14);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.55);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s ease-out;
+            z-index: 40;
+        }
+
+        .modal-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            width: min(420px, 92vw);
+            border-radius: 18px;
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.15), transparent),
+                        rgba(15, 23, 42, 0.98);
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            padding: 1.4rem 1.5rem 1.1rem;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.85),
+                0 0 0 1px rgba(15, 23, 42, 0.9);
+            transform: translateY(8px);
+            opacity: 0;
+            transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+        }
+
+        .modal-overlay.is-visible .modal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .modal-title span.icon {
+            font-size: 1.2rem;
+        }
+
+        .modal-body {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .modal-prediction-label {
+            margin-top: 0.5rem;
+            font-size: 0.86rem;
+        }
+
+        .modal-prediction-label strong {
+            color: var(--text-main);
+        }
+
+        .modal-footer {
+            margin-top: 0.9rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-close {
+            border: none;
+            border-radius: 999px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.78rem;
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-muted);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            background: rgba(15, 23, 42, 1);
+            color: var(--text-main);
+        }
+
+        footer.page-footer {
+            margin-top: 1.8rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        footer.page-footer span strong {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="page-header">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                PREDICTIVE MAINTENANCE • MLOPS
+            </div>
+            <h1>End-to-End MLOps Solution for Machine Predictive Maintenance</h1>
+            <p>
+                Predict machine failures before they occur using sensor data like air temperature,
+                process temperature, torque, rotational speed, and tool wear.
+            </p>
+        </header>
+
+        <main>
+            <!-- LEFT: Problem + Features -->
+            <div>
+                <section class="card">
+                    <div class="card-section-label">Problem Statement</div>
+                    <h2><span class="icon">⚙️</span> Machine Failure Prediction</h2>
+                    <p>
+                        The objective is to predict whether a particular machine will fail, and if so,
+                        the type of failure. The model uses features such as
+                        <strong>Air Temperature [K]</strong>, <strong>Process Temperature [K]</strong>,
+                        <strong>Rotational Speed [rpm]</strong>, <strong>Torque [Nm]</strong>, and
+                        <strong>Tool Wear [min]</strong>.
+                    </p>
+                </section>
+
+                <section class="card" style="margin-top: 1rem;">
+                    <div class="card-section-label">Description of Features</div>
+                    <h2><span class="icon">📊</span> Input Feature Overview</h2>
+                    <p>
+                        Enter the following parameters to get a machine failure prediction:
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Type</td>
+                                <td>
+                                    Letter L, M, or H for low (50% of all products), medium (30%),
+                                    and high (20%) product quality variants and a variant-specific serial number.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Air Temperature [K]</td>
+                                <td>
+                                    Generated using a random walk process, normalized to a standard deviation
+                                    of 2 K around 300 K.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Process Temperature [K]</td>
+                                <td>
+                                    Generated using a random walk process normalized to a deviation of 1 K,
+                                    added to the air temperature plus 10 K.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Rotational Speed [rpm]</td>
+                                <td>
+                                    Calculated from power of 2860 W, overlaid with normally distributed noise.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Torque [Nm]</td>
+                                <td>
+                                    Normally distributed around 40 Nm with σ = 10 Nm and no negative values.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tool Wear [min]</td>
+                                <td>
+                                    Quality variants H/M/L add 5/3/2 minutes of tool wear to the used tool.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+
+            <!-- RIGHT: Training + Prediction -->
+            <aside>
+                <!-- MODEL TRAINING CARD -->
+                <section class="card">
+                    <div class="card-section-label">Model Training</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+                        <h2><span class="icon">🧠</span> Train Maintenance Model</h2>
+                        <span class="status-badge" id="statusBadge">Idle</span>
+                    </div>
+                    <p>
+                        Trigger a full training pipeline on the latest dataset. This may take a few minutes
+                        depending on the data size and model configuration.
+                    </p>
+
+                    <div class="train-meta">
+                        <div class="meta-item">
+                            <span class="meta-dot"></span>
+                            Last run: <span id="lastRun">Not available</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-dot"></span>
+                            Target: machine failure &amp; failure type
+                        </div>
+                    </div>
+
+                    <form id="trainForm" action="{{ url_for('train_route') }}" method="POST">
+                        <button type="submit" id="trainButton">
+                            <span id="trainButtonIcon">▶</span>
+                            <span id="trainButtonText">Start Training</span>
+                        </button>
+                    </form>
+                    <div id="trainResponse" class="info"></div>
+                </section>
+
+                <!-- PREDICTION CARD -->
+                <section class="card form-card">
+                    <div class="card-section-label">Prediction on User Input</div>
+                    <h2><span class="icon">🧮</span> Predict on a Machine Instance</h2>
+                    <p>
+                        Provide the machine's current operating conditions to get an instant prediction
+                        of failure risk and failure type.
+                    </p>
+
+                    <!-- Input Form -->
+                    <form class="predict-form" action="{{ url_for('predict_datapoint') }}" method="POST">
+                        <div>
+                            <label for="type">Type (L = Low, M = Medium, H = High)</label>
+                            <input type="text" id="type" name="type" maxlength="1" required>
+                        </div>
+
+                        <div>
+                            <label for="air_temperature">Air Temperature [K]</label>
+                            <input type="number" id="air_temperature" name="air_temperature_k" step="0.1" required>
+                        </div>
+
+                        <div>
+                            <label for="process_temperature">Process Temperature [K]</label>
+                            <input type="number" id="process_temperature" name="process_temperature_k" step="0.1" required>
+                        </div>
+
+                        <div>
+                            <label for="rotational_speed">Rotational Speed [rpm]</label>
+                            <input type="number" id="rotational_speed" name="rotational_speed_rpm" required>
+                        </div>
+
+                        <div>
+                            <label for="torque">Torque [Nm]</label>
+                            <input type="number" id="torque" name="torque_nm" step="0.1" required>
+                        </div>
+
+                        <div>
+                            <label for="tool_wear">Tool Wear [min]</label>
+                            <input type="number" id="tool_wear" name="tool_wear_min" required>
+                        </div>
+
+                        <div class="full-width">
+                            <button type="submit">
+                                <span class="btn-icon">▶</span>
+                                Predict Failure
+                            </button>
+                            <div class="helper-text">
+                                The model uses the above features to infer machine failure and the most likely failure mode.
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Last prediction summary inside the card -->
+                    <div class="prediction-summary">
+                        <div>
+                            <strong>Last Prediction:</strong>
+                            <span id="prediction-result">
+                                {% if results is not defined or results is none %}
+                                    No prediction yet. Submit the form to see results.
+                                {% elif results == 0 %}
+                                    Heat Dissipation Failure
+                                {% elif results == 1 %}
+                                    No Failure
+                                {% elif results == 2 %}
+                                    Overstrain Failure
+                                {% elif results == 3 %}
+                                    Power Failure
+                                {% elif results == 4 %}
+                                    Random Failures
+                                {% elif results == 5 %}
+                                    Tool Wear Failure
+                                {% else %}
+                                    Invalid result
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div>
+                            {% if results is defined and results is not none %}
+                                {% if results == 1 %}
+                                    <span class="prediction-pill success">Normal Operation</span>
+                                {% else %}
+                                    <span class="prediction-pill failure">Attention Required</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="prediction-pill" style="background: var(--accent-soft); border:1px solid rgba(56,189,248,0.6); color: var(--accent);">
+                                    Awaiting Input
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+
+        <footer class="page-footer">
+            <span>Powered by <strong>Machine Learning &amp; MLOps</strong></span>
+            <span>Backend: Flask • Model: Predictive Maintenance Classifier</span>
+        </footer>
+    </div>
+
+    <!-- Prediction Modal (window pop) -->
+    <div
+        class="modal-overlay {% if results is defined and results is not none %}is-visible{% endif %}"
+        id="predictionModal"
+    >
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="icon">🔍</span>
+                    Prediction Result
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Based on the provided machine parameters, the model predicted the following status:
+                </p>
+
+                <p class="modal-prediction-label">
+                    <strong>
+                        {% if results == 0 %}
+                            Heat Dissipation Failure
+                        {% elif results == 1 %}
+                            No Failure
+                        {% elif results == 2 %}
+                            Overstrain Failure
+                        {% elif results == 3 %}
+                            Power Failure
+                        {% elif results == 4 %}
+                            Random Failures
+                        {% elif results == 5 %}
+                            Tool Wear Failure
+                        {% else %}
+                            Invalid result
+                        {% endif %}
+                    </strong>
+                </p>
+
+                {% if results is defined and results is not none %}
+                    {% if results == 1 %}
+                        <p class="modal-prediction-label">
+                            The machine is operating within acceptable conditions. No immediate action is required.
+                        </p>
+                    {% else %}
+                        <p class="modal-prediction-label">
+                            The model indicates a <strong>potential failure</strong>. Please review this machine's
+                            operating conditions and schedule maintenance if necessary.
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === TRAINING SECTION LOGIC ===
+        const trainForm = document.getElementById("trainForm");
+        const trainButton = document.getElementById("trainButton");
+        const trainButtonText = document.getElementById("trainButtonText");
+        const trainButtonIcon = document.getElementById("trainButtonIcon");
+        const trainResponse = document.getElementById("trainResponse");
+        const statusBadge = document.getElementById("statusBadge");
+        const lastRun = document.getElementById("lastRun");
+
+        if (trainForm) {
+            trainForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                // UI: loading state
+                trainButton.disabled = true;
+                trainButtonIcon.innerHTML = "";
+                const spinner = document.createElement("span");
+                spinner.classList.add("spinner");
+                trainButtonIcon.appendChild(spinner);
+                trainButtonText.textContent = "Training...";
+                trainResponse.textContent = "Training in progress. Please wait…";
+                trainResponse.className = "info";
+                statusBadge.textContent = "Running…";
+                statusBadge.classList.remove("completed", "error");
+                statusBadge.classList.add("running");
+
+                fetch(trainForm.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                    // body: JSON.stringify({}) // add payload if needed
+                })
+                .then(response => response.text())
+                .then(data => {
+                    const msg = data || "Training completed successfully.";
+                    trainResponse.textContent = msg;
+                    trainResponse.className = "success";
+                    statusBadge.textContent = "Completed";
+                    statusBadge.classList.remove("running", "error");
+                    statusBadge.classList.add("completed");
+                    if (lastRun) {
+                        const now = new Date();
+                        lastRun.textContent = now.toLocaleString();
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    trainResponse.textContent = "An error occurred during training.";
+                    trainResponse.className = "error";
+                    statusBadge.textContent = "Error";
+                    statusBadge.classList.remove("running", "completed");
+                    statusBadge.classList.add("error");
+                })
+                .finally(() => {
+                    trainButton.disabled = false;
+                    trainButtonIcon.innerHTML = "▶";
+                    trainButtonText.textContent = "Start Training";
+                });
+            });
+        }
+
+        // === PREDICTION MODAL LOGIC ===
+        const modalOverlay = document.getElementById("predictionModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+
+        function closeModal() {
+            if (!modalOverlay) return;
+            modalOverlay.classList.remove("is-visible");
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener("click", closeModal);
+        }
+
+        if (modalOverlay) {
+            modalOverlay.addEventListener("click", (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
